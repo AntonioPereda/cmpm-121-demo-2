@@ -4,4 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- N/A, TEST COMMIT
+- Set the name of the project
+- Created the canvas 
