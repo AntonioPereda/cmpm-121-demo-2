@@ -46,13 +46,16 @@ canvas.addEventListener("mousedown", (event) => {
 
 addEventListener("mousemove", (event) => {
     if (cursor.active == true){
-        context.beginPath();
-        context.moveTo(cursor.x, cursor.y);
-        context.lineTo(event.offsetX, event.offsetY);
-        context.stroke();
-        cursor.x = event.offsetX;
-        cursor.y = event.offsetY;   
+        if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
+            context.beginPath();
+            context.moveTo(cursor.x, cursor.y);
+            context.lineTo(event.offsetX, event.offsetY);
+            context.stroke();
+            cursor.x = event.offsetX;
+            cursor.y = event.offsetY;
+        } else {cursor.active = false;}
     }
+    
 });
 
 

@@ -4,5 +4,4 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- Added drawing capabilties
-- Added clear button
+- Added functionality for the scenario that the user starts drawing on canvas, goes off the canvas, and comes back into canvas: Drawing auto stops
