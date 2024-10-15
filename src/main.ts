@@ -28,21 +28,47 @@ canvas.style.position = "absolute";
 canvas.style.borderRadius = "20px";
 canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
-const ctx = canvas.getContext("2d");
+const context = canvas.getContext("2d");
 /////
 
 
 //DRAWING ON CANVAS
-addEventListener("mousemove", (event) => {});
+const cursor = { active: false, x: 0, y: 0 };
 
-onmousemove = (event) => {
-    
-};
+canvas.addEventListener("mousedown", (event) => {
+    cursor.active = true;
+    cursor.x = event.offsetX;
+    cursor.y = event.offsetY;
+});
+  canvas.addEventListener("mouseup", (event) => {
+    cursor.active = false;
+});
+
+addEventListener("mousemove", (event) => {
+    if (cursor.active == true){
+        context.beginPath();
+        context.moveTo(cursor.x, cursor.y);
+        context.lineTo(event.offsetX, event.offsetY);
+        context.stroke();
+        cursor.x = event.offsetX;
+        cursor.y = event.offsetY;   
+    }
+});
+
+
 /////
 
 //CLEAR BUTTON//
 const clearButton = document.createElement("button");
 clearButton.innerHTML = "Clear Canvas";
+clearButton.style.position = "absolute";
+clearButton.style.left = "450px";
+clearButton.style.top = "250px";
+app.append(clearButton);
+
+clearButton.addEventListener("click", ()=>{
+    context.clearRect(0, 0, canvas.width, canvas.height);
+})  
 /////
 
 

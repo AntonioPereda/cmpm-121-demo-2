@@ -4,6 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- Set Canvas to 256x256 PX
-- Added context to Canvas
-- Added beginings of mouse input
+- Added drawing capabilties
+- Added clear button
