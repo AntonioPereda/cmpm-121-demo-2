@@ -4,5 +4,6 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- Set the name of the project
-- Created the canvas 
+- Set Canvas to 256x256 PX
+- Added context to Canvas
+- Added beginings of mouse input

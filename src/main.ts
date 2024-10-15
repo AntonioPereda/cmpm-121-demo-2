@@ -17,16 +17,32 @@ app.style.position = "absolute";
 //CANVAS SETUP//
 const canvas = document.createElement("canvas");
 canvas.style.backgroundColor = "white";
-canvas.style.top = "280px";
+canvas.width = 256;
+canvas.height = 256;
+
+canvas.style.top = "210px";
 canvas.style.left = "30px";
-canvas.style.scale = "3.5";
-canvas.style.transform = "scaleY(2)";
-canvas.style.transform = "scaleX(1)";
+canvas.style.scale = "1.75";
+
 canvas.style.position = "absolute";
 canvas.style.borderRadius = "20px";
 canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
+const ctx = canvas.getContext("2d");
 /////
 
+
+//DRAWING ON CANVAS
+addEventListener("mousemove", (event) => {});
+
+onmousemove = (event) => {
+    
+};
+/////
+
+//CLEAR BUTTON//
+const clearButton = document.createElement("button");
+clearButton.innerHTML = "Clear Canvas";
+/////
 
 
