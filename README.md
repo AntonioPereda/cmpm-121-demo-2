@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- Debugging STEP 3
-- Somehow got this cool itteration of the drawing tool?
+- STEP 3 DONE
+- Started working on and added some starting code for Step 4

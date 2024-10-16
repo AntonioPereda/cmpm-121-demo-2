@@ -30,26 +30,31 @@ canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
 const context = canvas.getContext("2d");
 
-const canvasIterations:number[][][] = [];
+let canvasPoints:number[][][] = [];
+const canvasIterations:number[][][][] = [];
 /////
 
 //CANVAS DRAWING EVENT
-const canvasUpdate = new CustomEvent("UpdateCanvas", {"detail": {"eventProp": "data"}});
+let x,y;
+const canvasUpdate = new CustomEvent("UpdateCanvas");
 document.dispatchEvent(canvasUpdate);
 
 canvas.addEventListener("UpdateCanvas", function(e){
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    for (let coord of canvasIterations){
+    for (const point of canvasPoints) {
+      if (point.length > 1) {
         context.beginPath();
-        context.moveTo(coord[0][0], coord[0][1]);
-        context.lineTo(canvasUpdate.detail.eventProp.offsetX, canvasUpdate.detail.eventProp.offsetY);
+        let x = point[0][0];
+        let y = point[0][1];
+        context.moveTo(x, y);
+        for ([x,y] of point) {
+            context.lineTo(x, y);
+        }
         context.stroke();
-
-        cursor.x = canvasUpdate.detail.eventProp.offsetX;
-        cursor.y = canvasUpdate.detail.eventProp.offsetY;
-
+      }
     }
+
 });
 
 
@@ -60,10 +65,13 @@ canvas.addEventListener("UpdateCanvas", function(e){
 //DRAWING ON CANVAS
 const cursor = { active: false, x: 0, y: 0 };
 
+let newCanv:number[][] = [];
 canvas.addEventListener("mousedown", (event) => {
     cursor.active = true;
     cursor.x = event.offsetX;
     cursor.y = event.offsetY;
+    newCanv = [];
+    canvasPoints.push(newCanv);
 });
   canvas.addEventListener("mouseup", (event) => {
     cursor.active = false;
@@ -71,20 +79,25 @@ canvas.addEventListener("mousedown", (event) => {
 
 addEventListener("mousemove", (event) => {
     if (cursor.active == true){
-        //CANVAS POINTS
-        const newCanv:number[][] = []; 
-        if (canvasIterations.length != 0){const newCanv:number[][] = canvasIterations.slice(-1)[0];} //IF NOT EMPTY
+        //CANVAS POINTS 
+        if (canvasPoints.length != 0){const newCanv:number[][] = canvasPoints.slice(-1)[0];} //IF NOT EMPTY
                                                                                                     //GRAB LAST ELEMENT
 
         //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
             newCanv.push([cursor.x, cursor.y]);
-            canvasUpdate.detail.eventProp = event;
-            canvas.dispatchEvent(canvasUpdate);
+
+            cursor.x = event.offsetX;
+            cursor.y = event.offsetY;
+            canvas.dispatchEvent(canvasUpdate);         
+
         } else {cursor.active = false;}
         if (newCanv.length != 0){ //DONT UPDATE HISTORY
                                 //IF NO CHANGES WERE MADE
-            canvasIterations.push(newCanv);
+            canvasPoints.push(newCanv);
+            canvasIterations.push(canvasPoints);
+            canvas.dispatchEvent(canvasUpdate);                   
+
         }
     }
     
@@ -92,6 +105,9 @@ addEventListener("mousemove", (event) => {
 
 
 /////
+
+//REDRAW CANVAS
+
 
 //CLEAR BUTTON//
 const clearButton = document.createElement("button");
@@ -102,8 +118,10 @@ clearButton.style.top = "250px";
 app.append(clearButton);
 
 clearButton.addEventListener("click", ()=>{
+    console.log(canvasPoints);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    canvasIterations.push([]);
+    canvasIterations.push(canvasPoints);
+    canvasPoints = [];
 })  
 /////
 
