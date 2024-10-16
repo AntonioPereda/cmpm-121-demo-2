@@ -39,14 +39,15 @@ document.dispatchEvent(canvasUpdate);
 
 canvas.addEventListener("UpdateCanvas", function(e){
 
+    context.clearRect(0, 0, canvas.width, canvas.height);
     for (let coord of canvasIterations){
         context.beginPath();
         context.moveTo(coord[0][0], coord[0][1]);
         context.lineTo(canvasUpdate.detail.eventProp.offsetX, canvasUpdate.detail.eventProp.offsetY);
         context.stroke();
 
-        cursor.x = MouseEvent.offsetX;
-        cursor.y = MouseEvent.offsetY;
+        cursor.x = canvasUpdate.detail.eventProp.offsetX;
+        cursor.y = canvasUpdate.detail.eventProp.offsetY;
 
     }
 });
