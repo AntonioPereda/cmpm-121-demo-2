@@ -29,7 +29,31 @@ canvas.style.borderRadius = "20px";
 canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
 const context = canvas.getContext("2d");
+
+const canvasIterations:number[][][] = [];
 /////
+
+//CANVAS DRAWING EVENT
+const canvasUpdate = new CustomEvent("UpdateCanvas", {"detail": {"eventProp": "data"}});
+document.dispatchEvent(canvasUpdate);
+
+canvas.addEventListener("UpdateCanvas", function(e){
+
+    for (let coord of canvasIterations){
+        context.beginPath();
+        context.moveTo(coord[0][0], coord[0][1]);
+        context.lineTo(canvasUpdate.detail.eventProp.offsetX, canvasUpdate.detail.eventProp.offsetY);
+        context.stroke();
+
+        cursor.x = MouseEvent.offsetX;
+        cursor.y = MouseEvent.offsetY;
+
+    }
+});
+
+
+
+////
 
 
 //DRAWING ON CANVAS
@@ -46,14 +70,21 @@ canvas.addEventListener("mousedown", (event) => {
 
 addEventListener("mousemove", (event) => {
     if (cursor.active == true){
+        //CANVAS POINTS
+        const newCanv:number[][] = []; 
+        if (canvasIterations.length != 0){const newCanv:number[][] = canvasIterations.slice(-1)[0];} //IF NOT EMPTY
+                                                                                                    //GRAB LAST ELEMENT
+
+        //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
-            context.beginPath();
-            context.moveTo(cursor.x, cursor.y);
-            context.lineTo(event.offsetX, event.offsetY);
-            context.stroke();
-            cursor.x = event.offsetX;
-            cursor.y = event.offsetY;
+            newCanv.push([cursor.x, cursor.y]);
+            canvasUpdate.detail.eventProp = event;
+            canvas.dispatchEvent(canvasUpdate);
         } else {cursor.active = false;}
+        if (newCanv.length != 0){ //DONT UPDATE HISTORY
+                                //IF NO CHANGES WERE MADE
+            canvasIterations.push(newCanv);
+        }
     }
     
 });
@@ -71,6 +102,7 @@ app.append(clearButton);
 
 clearButton.addEventListener("click", ()=>{
     context.clearRect(0, 0, canvas.width, canvas.height);
+    canvasIterations.push([]);
 })  
 /////
 

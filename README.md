@@ -4,4 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- Added functionality for the scenario that the user starts drawing on canvas, goes off the canvas, and comes back into canvas: Drawing auto stops
+- Debugging STEP 3
+- Somehow got this cool itteration of the drawing tool?
