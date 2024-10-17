@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 3 DONE
-- Started working on and added some starting code for Step 4
+- STEP 4 DONE
+- Also simplified code, some of which were causing bugs

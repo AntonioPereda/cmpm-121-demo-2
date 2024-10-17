@@ -30,8 +30,8 @@ canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
 const context = canvas.getContext("2d");
 
-let canvasPoints:number[][][] = [];
-const canvasIterations:number[][][][] = [];
+let canvasPoints = [];
+let redo = [];
 /////
 
 //CANVAS DRAWING EVENT
@@ -40,6 +40,7 @@ const canvasUpdate = new CustomEvent("UpdateCanvas");
 document.dispatchEvent(canvasUpdate);
 
 canvas.addEventListener("UpdateCanvas", function(e){
+    console.log(canvasPoints);
 
     context.clearRect(0, 0, canvas.width, canvas.height);
     for (const point of canvasPoints) {
@@ -56,17 +57,16 @@ canvas.addEventListener("UpdateCanvas", function(e){
     }
 
 });
-
-
-
 ////
+
 
 
 //DRAWING ON CANVAS
 const cursor = { active: false, x: 0, y: 0 };
 
-let newCanv:number[][] = [];
+let newCanv = [];
 canvas.addEventListener("mousedown", (event) => {
+
     cursor.active = true;
     cursor.x = event.offsetX;
     cursor.y = event.offsetY;
@@ -75,14 +75,11 @@ canvas.addEventListener("mousedown", (event) => {
 });
   canvas.addEventListener("mouseup", (event) => {
     cursor.active = false;
+    newCanv = [];
 });
 
 addEventListener("mousemove", (event) => {
-    if (cursor.active == true){
-        //CANVAS POINTS 
-        if (canvasPoints.length != 0){const newCanv:number[][] = canvasPoints.slice(-1)[0];} //IF NOT EMPTY
-                                                                                                    //GRAB LAST ELEMENT
-
+    if (cursor.active){
         //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
             newCanv.push([cursor.x, cursor.y]);
@@ -92,21 +89,12 @@ addEventListener("mousemove", (event) => {
             canvas.dispatchEvent(canvasUpdate);         
 
         } else {cursor.active = false;}
-        if (newCanv.length != 0){ //DONT UPDATE HISTORY
-                                //IF NO CHANGES WERE MADE
-            canvasPoints.push(newCanv);
-            canvasIterations.push(canvasPoints);
-            canvas.dispatchEvent(canvasUpdate);                   
-
-        }
     }
     
 });
 
 
 /////
-
-//REDRAW CANVAS
 
 
 //CLEAR BUTTON//
@@ -118,11 +106,40 @@ clearButton.style.top = "250px";
 app.append(clearButton);
 
 clearButton.addEventListener("click", ()=>{
-    console.log(canvasPoints);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    canvasIterations.push(canvasPoints);
     canvasPoints = [];
 })  
+/////
+
+//UN_RE-DO BUTTON//
+const undoButton = document.createElement("button");
+undoButton.innerHTML = "Undo";
+undoButton.style.position = "absolute";
+undoButton.style.left = "-300px";
+undoButton.style.top = "200px";
+app.append(undoButton);
+
+undoButton.addEventListener("click", ()=>{
+    if (canvasPoints.length > 0){
+        redo.push(canvasPoints.pop());
+        canvas.dispatchEvent(canvasUpdate);  
+    }
+}) 
+
+const redoButton = document.createElement("button");
+redoButton.innerHTML = "Redo";
+redoButton.style.position = "absolute";
+redoButton.style.left = "-300px";
+redoButton.style.top = "400px";
+app.append(redoButton);
+
+redoButton.addEventListener("click", ()=>{
+    if (redo.length > 0) {
+        canvasPoints.push(redo.pop());
+        canvas.dispatchEvent(canvasUpdate);  
+    }
+})
+
 /////
 
 
