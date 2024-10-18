@@ -4,6 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 5 DONE
-- Drawing now self constructs based on points
-- Drawing points are now a class object
+- STEP 6 DONE
+- Added Line Thickness options
