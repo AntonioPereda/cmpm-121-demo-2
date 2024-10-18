@@ -13,6 +13,8 @@ app.style.top = "0px";
 app.style.left = "470px";
 app.style.position = "absolute";
 ///
+const cursor = { active: false, x: 0, y: 0 };
+
 
 
 
@@ -32,6 +34,7 @@ canvas.style.borderRadius = "20px";
 canvas.style.filter = "dropShadow(10px 40px 30px #ffffff)";
 app.append(canvas);
 const context = canvas.getContext("2d");
+context.font = 'bold 10px Arial';
 
 let canvasPoints = [];
 let redo = [];
@@ -92,7 +95,6 @@ function redraw(){
 
 
 //DRAWING ON CANVAS
-const cursor = { active: false, x: 0, y: 0 };
 let P = new setOfPoints;
 
 
@@ -101,6 +103,7 @@ canvas.addEventListener("mousedown", (event) => {
     cursor.x = event.offsetX;
     cursor.y = event.offsetY;
     let tempP = new setOfPoints;
+    cursorIcon.size = 10;
     P.points = [];
 });
   canvas.addEventListener("mouseup", (event) => {
@@ -111,17 +114,27 @@ canvas.addEventListener("mousedown", (event) => {
     P.points = [];  
 });
 
+
+canvas.addEventListener("mousemove", (event) => {
+    cursorIcon.updatePosition(cursor.x, cursor.y)
+});
+
 addEventListener("mousemove", (event) => {
+    cursor.x = event.offsetX;
+    cursor.y = event.offsetY;
+    cursorIcon.updatePosition(cursor.x, cursor.y)
+    cursorIcon.draw(context);
+
     if (cursor.active){
         //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
             P.drag(cursor.x, cursor.y, lineWidth);
-            cursor.x = event.offsetX;
-            cursor.y = event.offsetY;
             canvas.dispatchEvent(canvasUpdate);
             redraw();         
 
-        } else {cursor.active = false;}
+        } else {
+            cursor.active = false;
+        }
     }
     
 });
@@ -195,6 +208,7 @@ app.append(lightLines);
 
 lightLines.addEventListener("click", ()=>{
     lineWidth = 1;
+    cursorIcon.updateSize(context);
 })
 
 const heavyLines = document.createElement("button");
@@ -209,4 +223,38 @@ app.append(heavyLines);
 
 heavyLines.addEventListener("click", ()=>{
     lineWidth = 3;
+    cursorIcon.updateSize(context);
 })
+
+
+//CURSOR ICON
+class cursorPreview {
+    constructor(){
+        this.position = [];
+        this.offset = [-3,1];
+    }
+
+    updatePosition(x,y){
+        this.position = [x,y];
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    updateSize(ctx){
+        if (ctx.font == 'bold 17px Arial'){
+            ctx.font = 'bold 10px Arial';
+            this.offset = [-3,1];
+            console.log(ctx.font);
+        } else {
+            ctx.font = 'bold 17px Arial';
+            this.offset = [-5,5];
+            console.log(ctx.font);
+        }
+    }
+
+    draw(ctx){
+        ctx.lineWidth = this.size;
+        redraw();
+        ctx.fillText("o", this.position[0] + this.offset[0], this.position[1] + this.offset[1]);    
+    }
+}
+let cursorIcon = new cursorPreview;

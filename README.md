@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 6 DONE
-- Added Line Thickness options
+- STEP 7 DONE
+- Added Cursor icon
