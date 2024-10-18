@@ -4,5 +4,6 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 4 DONE
-- Also simplified code, some of which were causing bugs
+- STEP 5 DONE
+- Drawing now self constructs based on points
+- Drawing points are now a class object
