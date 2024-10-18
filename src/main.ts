@@ -50,7 +50,9 @@ document.dispatchEvent(canvasUpdate);
 
 canvas.addEventListener("UpdateCanvas", function(){
     context.clearRect(0, 0, canvas.width, canvas.height);
-    P.display(context);
+    if (icon == `o`){
+        P.display(context);
+    } else {S.display(context);}
     
 });
 ////
@@ -83,7 +85,69 @@ class setOfPoints {
         }
     }
 }
+///
 
+
+//STICKER CLASS
+let icon = `o`;
+class sticker {
+    constructor() {
+        this.points = [];
+    }
+
+    drag(x, y, i) {
+        // Add new point to the line
+        this.points = [x,y,i]
+    }
+
+    display(ctx) {
+        if (this.points.length > 0) {
+            ctx.fillText(`${this.points[2]}`, this.points[0], this.points[1]);
+        }
+    }
+}
+
+//MAKING listOfStickers
+interface stickerVals {
+    image: string,
+    xval: string,
+    yval: string
+  }
+  
+const listOfStickers: stickerVals[] = [
+    {
+    image: "🤔",
+    xval: "-70px",
+    yval: "650px"
+    },
+    {
+    image: "🗣️",
+    xval: "100px",
+    yval: "650px"
+    },
+    {
+    image: "🍔",
+    xval: "280px",
+    yval: "650px"
+    },
+]
+//!!!CREATING BUTTONS VIA DDD!!!//
+for (let a = 0; a <= listOfStickers.length - 1; a++) {
+  const button = document.createElement("button");
+  button.innerHTML = `${listOfStickers[a].image}`;
+
+  
+
+  button.onclick = () => {
+    icon = `${listOfStickers[a].image}`
+    console.log(icon);
+};
+
+  button.style.position = "absolute";
+  button.style.left = listOfStickers[a].xval;
+  button.style.top = listOfStickers[a].yval;
+  app.append(button);
+}
 //REDRAW FUNCT
 function redraw(){
     for (let item of canvasPoints) {
@@ -96,7 +160,7 @@ function redraw(){
 
 //DRAWING ON CANVAS
 let P = new setOfPoints;
-
+let S = new sticker;
 
 canvas.addEventListener("mousedown", (event) => {
     cursor.active = true;
@@ -108,10 +172,17 @@ canvas.addEventListener("mousedown", (event) => {
 });
   canvas.addEventListener("mouseup", (event) => {
     cursor.active = false;
-    let tempP = new setOfPoints;
-    tempP.points = P.points;
-    canvasPoints.push(tempP);
-    P.points = [];  
+    if (icon == `o`){
+        let temp = new setOfPoints;
+        temp.points = P.points;
+        canvasPoints.push(temp);
+        P.points = [];
+    } else {
+        let temp = new sticker;
+        temp.points = S.points;
+        canvasPoints.push(temp);
+        S.points = [];
+    }
 });
 
 
@@ -122,15 +193,22 @@ canvas.addEventListener("mousemove", (event) => {
 addEventListener("mousemove", (event) => {
     cursor.x = event.offsetX;
     cursor.y = event.offsetY;
+
     cursorIcon.updatePosition(cursor.x, cursor.y)
     cursorIcon.draw(context);
 
     if (cursor.active){
         //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
-            P.drag(cursor.x, cursor.y, lineWidth);
-            canvas.dispatchEvent(canvasUpdate);
-            redraw();         
+            if (icon == `o`) {
+                P.drag(cursor.x, cursor.y, lineWidth);
+                canvas.dispatchEvent(canvasUpdate);
+                redraw();
+            } else {
+                S.drag(cursor.x, cursor.y,icon);
+                canvas.dispatchEvent(canvasUpdate);
+                redraw();
+            }        
 
         } else {
             cursor.active = false;
@@ -225,9 +303,18 @@ heavyLines.addEventListener("click", ()=>{
     lineWidth = 3;
     cursorIcon.updateSize(context);
 })
+///
+
 
 
 //CURSOR ICON
+const cursorPicture = new CustomEvent("CursorPicture");
+document.dispatchEvent(cursorPicture);
+
+canvas.addEventListener("CursorPicture", function(){
+    
+});
+
 class cursorPreview {
     constructor(){
         this.position = [];
@@ -240,6 +327,7 @@ class cursorPreview {
     }
 
     updateSize(ctx){
+        icon = `o`;
         if (ctx.font == 'bold 17px Arial'){
             ctx.font = 'bold 10px Arial';
             this.offset = [-3,1];
@@ -254,7 +342,11 @@ class cursorPreview {
     draw(ctx){
         ctx.lineWidth = this.size;
         redraw();
-        ctx.fillText("o", this.position[0] + this.offset[0], this.position[1] + this.offset[1]);    
+        ctx.fillText(`${icon}`, this.position[0] + this.offset[0], this.position[1] + this.offset[1]);    
+    }
+
+    changeCursor(newcursor){
+        this.icon = newcursor;
     }
 }
 let cursorIcon = new cursorPreview;
