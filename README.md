@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 7 DONE
-- Added Cursor icon
+- STEP 8 DONE
+- Added Sticker functionality
