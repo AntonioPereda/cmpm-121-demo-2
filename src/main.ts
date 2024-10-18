@@ -63,9 +63,9 @@ class setOfPoints {
         this.points = [];
     }
 
-    drag(x, y) {
+    drag(x, y, t) {
         // Add new point to the line
-        this.points.push([x, y]);
+        this.points.push([x, y, t]);
     }
 
     display(ctx) {
@@ -73,6 +73,7 @@ class setOfPoints {
             ctx.beginPath();
             ctx.moveTo(this.points[0][0], this.points[0][1]);
             this.points.forEach(point => {
+                ctx.lineWidth = point[2];
                 ctx.lineTo(point[0], point[1]);
             });
             ctx.stroke();
@@ -114,7 +115,7 @@ addEventListener("mousemove", (event) => {
     if (cursor.active){
         //CANVAS HISTORY
         if (cursor.x >= 0 && cursor.x <=canvas.width && cursor.y >= 0 && cursor.y <=canvas.height){
-            P.drag(cursor.x, cursor.y);
+            P.drag(cursor.x, cursor.y, lineWidth);
             cursor.x = event.offsetX;
             cursor.y = event.offsetY;
             canvas.dispatchEvent(canvasUpdate);
@@ -125,6 +126,7 @@ addEventListener("mousemove", (event) => {
     
 });
 /////
+
 
 
 
@@ -141,6 +143,8 @@ clearButton.addEventListener("click", ()=>{
     canvasPoints = [];
 })  
 /////
+
+
 
 
 
@@ -178,3 +182,31 @@ redoButton.addEventListener("click", ()=>{
 /////
 
 
+//LINE THICKNESS
+let lineWidth = context.lineWidth;
+
+const lightLines = document.createElement("button");
+lightLines.innerHTML = "Thin Lines"
+lightLines.style.position = "absolute";
+lightLines.style.left = "-80px";
+lightLines.style.top = "570px";
+lightLines.style.scale = "0.75";
+app.append(lightLines);
+
+lightLines.addEventListener("click", ()=>{
+    lineWidth = 1;
+})
+
+const heavyLines = document.createElement("button");
+heavyLines.innerHTML = "Heavy Lines"
+heavyLines.style.position = "absolute";
+heavyLines.style.left = "150px";
+heavyLines.style.top = "575px";
+heavyLines.style.fontSize = "30px";
+heavyLines.style.scale = "0.85";
+heavyLines.style.width = "270px"
+app.append(heavyLines);
+
+heavyLines.addEventListener("click", ()=>{
+    lineWidth = 3;
+})
