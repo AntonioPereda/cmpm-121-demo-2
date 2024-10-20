@@ -4,5 +4,4 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 10 DONE
-- Exporting the drawing to PNG is now available
+- STEP 11, N/A, NO CHANGES
