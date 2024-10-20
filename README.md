@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 9 DONE
-- Added Custom Stickers
+- STEP 10 DONE
+- Exporting the drawing to PNG is now available

@@ -176,10 +176,10 @@ let offset = 0;
   };
 ///
 
-//REDRAW FUNCT
-function redraw(){
+//redraw(context) FUNCT
+function redraw(ctx){
     for (let item of canvasPoints) {
-        item.display(context);
+        item.display(ctx);
     }
 }
 
@@ -230,11 +230,11 @@ addEventListener("mousemove", (event) => {
             if (icon == `o`) {
                 P.drag(cursor.x, cursor.y, lineWidth);
                 canvas.dispatchEvent(canvasUpdate);
-                redraw();
+                redraw(context);
             } else {
                 S.drag(cursor.x, cursor.y,icon);
                 canvas.dispatchEvent(canvasUpdate);
-                redraw();
+                redraw(context);
             }        
 
         } else {
@@ -278,7 +278,7 @@ undoButton.addEventListener("click", ()=>{
     if (canvasPoints.length > 0){
         redo.push(canvasPoints.pop());
         canvas.dispatchEvent(canvasUpdate);  
-        redraw();  
+        redraw(context);  
     }
 }) 
 
@@ -293,7 +293,7 @@ redoButton.addEventListener("click", ()=>{
     if (redo.length > 0) {
         canvasPoints.push(redo.pop());
         canvas.dispatchEvent(canvasUpdate);  
-        redraw();
+        redraw(context);
     }
 })
 
@@ -366,7 +366,7 @@ class cursorPreview {
 
     draw(ctx){
         ctx.lineWidth = this.size;
-        redraw();
+        redraw(context);
         ctx.fillText(`${icon}`, this.position[0] + this.offset[0], this.position[1] + this.offset[1]);    
     }
 
@@ -375,3 +375,36 @@ class cursorPreview {
     }
 }
 let cursorIcon = new cursorPreview;
+
+
+
+//EXPORT
+const exportButton = document.createElement("button");
+exportButton.style.position = "absolute";
+exportButton.innerHTML = "Export";
+exportButton.style.scale = 1.5;
+exportButton.style.left = "720px";
+exportButton.style.top = "270px";
+app.append(exportButton);
+
+exportButton.addEventListener("click", ()=>{
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = 1024;
+    exportCanvas.height = 1024;
+    const exportContext = exportCanvas.getContext(`2d`);
+    redraw(exportContext);
+    exportContext.scale(4,4);
+
+    // Convert canvas content to a data URL
+    const dataURL = exportCanvas.toDataURL('image/png');
+
+    // Create a download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = dataURL;
+    downloadLink.download = 'drawing.png';
+
+    // Trigger the download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+})
