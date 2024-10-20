@@ -117,44 +117,71 @@ interface stickerVals {
 const listOfStickers: stickerVals[] = [
     {
     image: "🤔",
-    xval: "-70px",
+    xval: "-130px",
     yval: "650px"
     },
     {
     image: "🗣️",
-    xval: "100px",
+    xval: "10px",
     yval: "650px"
     },
     {
     image: "🍔",
-    xval: "280px",
+    xval: "150px",
     yval: "650px"
     },
 ]
 //!!!CREATING BUTTONS VIA DDD!!!//
-for (let a = 0; a <= listOfStickers.length - 1; a++) {
-  const button = document.createElement("button");
-  button.innerHTML = `${listOfStickers[a].image}`;
 
-  
-
-  button.onclick = () => {
-    icon = `${listOfStickers[a].image}`
-    console.log(icon);
-};
-
-  button.style.position = "absolute";
-  button.style.left = listOfStickers[a].xval;
-  button.style.top = listOfStickers[a].yval;
-  app.append(button);
+function updateButtons(){
+    for (let a = 0; a <= listOfStickers.length - 1; a++) {
+        const button = document.createElement("button");
+        button.innerHTML = `${listOfStickers[a].image}`;
+      
+        
+      
+        button.onclick = () => {
+          icon = `${listOfStickers[a].image}`
+      };
+      
+        button.style.position = "absolute";
+        button.style.left = listOfStickers[a].xval;
+        button.style.top = listOfStickers[a].yval;
+        app.append(button);
+      } 
 }
+updateButtons();
+
+let offset = 0;
+//ADD BUTTON
+  const addButton = document.createElement("button");
+  addButton.style.position = "absolute";
+  addButton.innerHTML = "Add Custom Sticker";
+  addButton.style.fontSize = "19px";
+  addButton.style.left = "290px";
+  addButton.style.top = "649px";
+  app.append(addButton);
+
+  addButton.onclick = () => {
+    const newImage = prompt("Please Copy/Paste the sticker you want to add: ");
+    
+    if ((newImage)){
+        const customButton = document.createElement("button");
+        listOfStickers.push({image:newImage, xval: (-150 + offset + "px"), yval: "750px"});
+        updateButtons();
+        offset+= 140;
+        alert(`Added ${newImage}`);
+    }
+
+  };
+///
+
 //REDRAW FUNCT
 function redraw(){
     for (let item of canvasPoints) {
         item.display(context);
     }
 }
-
 
 
 
@@ -331,11 +358,9 @@ class cursorPreview {
         if (ctx.font == 'bold 17px Arial'){
             ctx.font = 'bold 10px Arial';
             this.offset = [-3,1];
-            console.log(ctx.font);
         } else {
             ctx.font = 'bold 17px Arial';
             this.offset = [-5,5];
-            console.log(ctx.font);
         }
     }
 

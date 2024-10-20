@@ -4,5 +4,5 @@ incrementally modify this project, tracking their progress with git.
 
 ##CHANGES###
 
-- STEP 8 DONE
-- Added Sticker functionality
+- STEP 9 DONE
+- Added Custom Stickers
